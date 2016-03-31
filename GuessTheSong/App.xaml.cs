@@ -10,7 +10,7 @@ namespace GuessTheSong
     {
         private void Application_StartUp(object sender, StartupEventArgs e)
         {
-            new MainWindow { DataContext = new GuessTheSongViewModel() }.Show();
+            new MainWindow { DataContext = new SettingsViewModel() }.Show();
         }
     }
 }

@@ -1,8 +1,9 @@
 ﻿using System;
+using GuessTheSong.Infrasctucture;
 
 namespace GuessTheSong.Models
 {
-    public class SongFile
+    public class SongFile : ICloneable<SongFile>
     {
         public string FullPath { get; set; }
 
@@ -12,5 +13,13 @@ namespace GuessTheSong.Models
 
         public string FileNameWithoutExtension
             => FileName.Substring(0, FileName.LastIndexOf(".", StringComparison.Ordinal));
+
+        public SongFile Clone()
+        {
+            return new SongFile
+            {
+                FullPath = (string) FullPath.Clone()
+            };
+        }
     }
 }
