@@ -2,11 +2,21 @@
 
 namespace GuessTheSong.Models
 {
-    public class GameParticipant : ICloneable<GameParticipant>
+    public class GameParticipant : ObservableObject, ICloneable<GameParticipant>
     {
+        private int _score;
+
         public string Name { get; set; }
 
-        public int Score { get; set; }
+        public int Score
+        {
+            get { return _score; }
+            set
+            {
+                _score = value;
+                NotifyPropertyChanged("Score");
+            }
+        }
 
         public GameParticipant Clone()
         {

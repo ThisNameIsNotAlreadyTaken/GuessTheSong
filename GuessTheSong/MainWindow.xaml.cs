@@ -32,7 +32,7 @@ namespace GuessTheSong
 
         private void AddParticipant_OnClick(object sender, RoutedEventArgs e)
         {
-            var dialog = new AddParticipantDialog();
+            var dialog = new AddParticipantDialog {Owner = this};
 
             if (dialog.ShowDialog() != true) return;
 

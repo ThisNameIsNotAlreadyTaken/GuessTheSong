@@ -55,18 +55,22 @@ namespace GuessTheSong.ViewModels
                     var songs = Directory.GetFiles(d, "*", SearchOption.TopDirectoryOnly).ToList()
                         .Where(x => x.EndsWith(".mp3")).Select(f =>
                         {
-                            var tagFile = TagLib.File.Create(f);
+                            var name = f.Substring(f.LastIndexOf("\\", StringComparison.Ordinal) + 1);
+                            var info = name.Split(new []{"--"}, StringSplitOptions.None);
 
-                            int price;
+                            var artistName = info.Length > 1 ? info[1].Trim() : null;
+                            var songName = info.Length > 2 ? info[2].Trim().Replace(".mp3", "") : null;
 
-                            Int32.TryParse(tagFile.Tag.Comment, out price);
+                            var price = 0;
+
+                            if (info.Length > 0) int.TryParse(info[0].Trim(), out price);
 
                             return new Song
                             {
-                                ArtistName = tagFile.Tag.FirstAlbumArtist,
-                                Name = tagFile.Tag.Title,
+                                ArtistName = artistName,
+                                Name = songName,
                                 Price = price,
-                                File = new SongFile()
+                                File = new SongFile
                                 {
                                     FullPath = f
                                 }
