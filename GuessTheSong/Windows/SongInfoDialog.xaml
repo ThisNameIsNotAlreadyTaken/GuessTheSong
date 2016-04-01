@@ -1,0 +1,77 @@
+﻿<Window x:Class="GuessTheSong.Windows.SongInfoDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:shell="http://schemas.microsoft.com/winfx/2006/xaml/presentation/shell"
+        mc:Ignorable="d"
+        Title="SongInfoDialog" Width="600" Height="250" WindowStyle="None" WindowStartupLocation="CenterOwner">
+    <shell:WindowChrome.WindowChrome>
+        <shell:WindowChrome
+            ResizeBorderThickness="6"
+            CaptionHeight="30"
+            CornerRadius="0,0,0,0"
+            GlassFrameThickness="0">
+        </shell:WindowChrome>
+    </shell:WindowChrome.WindowChrome>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.RowSpan="2" BorderThickness="1" BorderBrush="Silver">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0.5,0"
+				   EndPoint="0.5,1">
+                    <GradientStop Color="White" Offset="0" />
+                    <GradientStop Color="Snow" Offset="1" />
+                </LinearGradientBrush>
+            </Border.Background>
+        </Border>
+
+        <Border Grid.Row="0">
+            <Grid>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Border Grid.ColumnSpan="2">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                                <GradientStop Color="#800080" Offset="0" />
+                                <GradientStop Color="#800080" Offset="1" />
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <Grid>
+                            <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left" Margin="10,0,0,0">
+                                <Label Foreground="Snow" FontSize="20" FontStretch="UltraExpanded">Song Info</Label>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </Grid>
+        </Border>
+
+        <Grid Grid.Row="1">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="80*"></RowDefinition>
+                    <RowDefinition Height="80*"></RowDefinition>
+                    <RowDefinition Height="47*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <TextBlock TextTrimming="CharacterEllipsis" Margin="10,0,0,0" FontSize="40" Text="{Binding ArtistName}"></TextBlock>
+                <TextBlock TextTrimming="CharacterEllipsis" Margin="10,0,0,0" Grid.Row="1" FontSize="40" Text="{Binding Name}"></TextBlock>
+                <Button Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Right" Content="OK" Click="OKButton_Click" Margin="0,6,10,11"  Width="70" Height="30"/>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>

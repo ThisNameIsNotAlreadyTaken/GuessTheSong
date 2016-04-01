@@ -45,9 +45,14 @@ namespace GuessTheSong.Windows
         private void OnWinnerChosen(object sender, SelectionChangedEventArgs e)
         {
             var combobox = (ComboBox) sender;
+
             if (combobox.SelectedIndex == 0) return;
-            ((GameViewModel)DataContext).PriceWinner(combobox.SelectedItem as GameParticipant);
+
+            var dataContext = (GameViewModel)DataContext;
+            dataContext.PriceWinner(combobox.SelectedItem as GameParticipant);
             combobox.IsEnabled = false;
+
+            new SongInfoDialog { DataContext = dataContext.SelectedSong, Owner = this}.ShowDialog();
         }
     }
 }
