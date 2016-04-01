@@ -10,6 +10,7 @@ using GuessTheSong.Models;
 
 namespace GuessTheSong.ViewModels
 {
+    //TODO: add save for later button and colorize that option
     public class GameViewModel : ObservableObject
     {
         public ObservableCollection<GameParticipant> Participants { get; set; }
@@ -55,14 +56,14 @@ namespace GuessTheSong.ViewModels
             if (song == null) return;
             SelectedSong = song;
 
-            if (File.Exists(SelectedSong.File.FullPath))
-            {
-                _mediaPlayer.Open(new Uri(SelectedSong.File.FullPath));
-            }
+            if (!File.Exists(SelectedSong.File.FullPath)) return;
+            _mediaPlayer.Open(new Uri(SelectedSong.File.FullPath));
+            Play();
         }
 
         public void PriceWinner(GameParticipant participant)
         {
+            Pause();
             participant.Score += SelectedSong.Price;
             SelectedSong.IsGuessed = true;
         }

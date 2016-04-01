@@ -14,9 +14,9 @@ namespace GuessTheSong
     {
         private void Application_StartUp(object sender, StartupEventArgs e)
         {
-          //  new MainWindow { DataContext = new SettingsViewModel() }.Show();
+           new MainWindow { DataContext = new SettingsViewModel() }.Show();
 
-            var categories = Enumerable.Range(0, 10).Select(x => new Category()
+           /* var categories = Enumerable.Range(0, 10).Select(x => new Category()
             {
                 Name = "Category " + x,
                 Songs = Enumerable.Range(0,10).Select(y => new Song
@@ -34,7 +34,7 @@ namespace GuessTheSong
                 Score = new Random().Next(10)*x
             }).ToList();
 
-          new GameWindow { DataContext = new GameViewModel(categories, participants) }.Show();
+          new GameWindow { DataContext = new GameViewModel(categories, participants) }.Show();*/
         }
     }
 }
