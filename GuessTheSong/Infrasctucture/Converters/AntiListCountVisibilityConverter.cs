@@ -6,7 +6,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Data;
 
-namespace Common.Instrastructure.Converters
+namespace GuessTheSong.Infrasctucture.Converters
 {
     public class AntiListCountVisibilityConverter : IValueConverter
     {

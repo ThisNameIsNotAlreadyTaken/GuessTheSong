@@ -2,7 +2,7 @@
 
 namespace GuessTheSong.Models
 {
-    public class Song : ICloneable<Song>
+    public class Song : ObservableObject, ICloneable<Song>
     {
         public string Name { get; set; }
 
@@ -12,6 +12,18 @@ namespace GuessTheSong.Models
 
         public SongFile File { get; set; }
 
+        private bool _isGuessed;
+
+        public bool IsGuessed
+        {
+            get { return _isGuessed; }
+            set
+            {
+                _isGuessed = value;
+                NotifyPropertyChanged("IsGuessed");
+            }
+        }
+
         public Song Clone()
         {
             return new Song
@@ -19,7 +31,8 @@ namespace GuessTheSong.Models
                 Name = (string) Name.Clone(),
                 ArtistName = (string) ArtistName.Clone(),
                 Price = Price,
-                File = File.Clone()
+                File = File.Clone(),
+                IsGuessed = false
             };
         }
     }

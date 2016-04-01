@@ -4,17 +4,18 @@ using System.Windows.Data;
 
 namespace GuessTheSong.Infrasctucture.Converters
 {
-   public class DoubleToPercentRatingConverter : IValueConverter
+    public class AntiBoolConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var doubleValue = System.Convert.ToDouble(value);
-            return doubleValue/10;
+            var boolValue = value as bool?;
+            return boolValue == null ? false : !boolValue;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            throw new NotImplementedException();
+            var boolValue = value as bool?;
+            return boolValue == null ? false : !boolValue;
         }
     }
 }

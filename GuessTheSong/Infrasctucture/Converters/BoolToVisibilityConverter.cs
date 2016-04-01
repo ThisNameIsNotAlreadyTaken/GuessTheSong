@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 
-namespace Common.Instrastructure.Converters
+namespace GuessTheSong.Infrasctucture.Converters
 {
     public class BoolToVisibilityConverter : IValueConverter
     {

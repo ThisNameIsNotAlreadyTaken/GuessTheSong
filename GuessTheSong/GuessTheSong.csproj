@@ -79,6 +79,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Infrasctucture\Converters\AntiBoolConverter.cs" />
     <Compile Include="Infrasctucture\Converters\AntiListCountVisibilityConverter.cs" />
     <Compile Include="Infrasctucture\Converters\AntiNullCollapsedVisibilityConverter.cs" />
     <Compile Include="Infrasctucture\Converters\AntiNullVisibilityConverter.cs" />
@@ -89,6 +90,7 @@
     <Compile Include="Infrasctucture\Converters\NullToUnknownStringConverter.cs" />
     <Compile Include="Infrasctucture\Converters\NullVisibilityConverter.cs" />
     <Compile Include="Infrasctucture\DelegateCommand.cs" />
+    <Compile Include="Infrasctucture\DelegateParametrizedCommand.cs" />
     <Compile Include="Infrasctucture\ICloneable.cs" />
     <Compile Include="Infrasctucture\ObservableObject.cs" />
     <Compile Include="Models\Category.cs" />
