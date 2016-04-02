@@ -8,7 +8,7 @@
         xmlns:converters="clr-namespace:GuessTheSong.Infrasctucture.Converters"
         xmlns:models="clr-namespace:GuessTheSong.Models"
         mc:Ignorable="d"
-        Title="GameWindow" WindowState="Maximized" WindowStartupLocation="CenterScreen">
+        Title="GameWindow" WindowState="Maximized" WindowStartupLocation="CenterScreen" Icon="../Resources/icon.png">
     <shell:WindowChrome.WindowChrome>
         <shell:WindowChrome
             ResizeBorderThickness="6"
@@ -207,6 +207,12 @@
                            HorizontalContentAlignment="Center" Margin="5,0,5,0" />
                         </Bold>
                     </Label>
+                    <Label>
+                        <Bold>
+                            <Label Content="{Binding TimerTick}" FontSize="30" FontFamily="Verdana"
+                           HorizontalContentAlignment="Center" Margin="5,0,5,0" />
+                        </Bold>
+                    </Label>
                     <Button Content="Play" FontSize="20" Command="{Binding PlayCommand}"  Margin="0,0,10,0"
                                 HorizontalAlignment="Center" VerticalAlignment="Center" Width="80"/>
                     <Button Content="Pause" FontSize="20" Command="{Binding PauseCommand}" Margin="0,0,10,0"
@@ -214,7 +220,7 @@
                     <Button Content="Stop" FontSize="20" Command="{Binding StopCommand}"
                                 HorizontalAlignment="Center" VerticalAlignment="Center" Width="80" Margin="0,0,10,0"/>
                     <ComboBox x:Name="WinnerCombobox" SelectedIndex="0" HorizontalAlignment="Center" VerticalAlignment="Center" DisplayMemberPath="Name"
-                              SelectedValuePath="Name" SelectionChanged="OnWinnerChosen">
+                              SelectedValuePath="Name" SelectionChanged="OnWinnerChosen" Margin="0,0,10,0">
                         <ComboBox.Resources>
                             <CollectionViewSource x:Key="ParticipantsList" Source="{Binding Path=Participants}" />
                         </ComboBox.Resources>
@@ -225,6 +231,8 @@
                             </CompositeCollection>
                         </ComboBox.ItemsSource>
                     </ComboBox>
+                    <Button Style="{StaticResource WindowColoredButtonStyle}" FontFamily="Segoe UI Symbol" 
+                      FontSize="30" Content="&#128129;" ToolTip="Show song info" VerticalAlignment="Center" Click="ShowSongInfo"/>
                 </StackPanel>
             </Grid>
         </Grid>

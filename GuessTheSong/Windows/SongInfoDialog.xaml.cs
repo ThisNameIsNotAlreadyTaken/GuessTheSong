@@ -32,7 +32,11 @@ namespace GuessTheSong.Windows
             var timer = (DispatcherTimer)sender;
             timer.Stop();
             timer.Tick -= TimerTick;
-            DialogResult = true;
+
+            if (DialogResult != true)
+            {
+                DialogResult = true;
+            }
         }
     }
 }

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:shell="http://schemas.microsoft.com/winfx/2006/xaml/presentation/shell"
         mc:Ignorable="d"
-        Title="AddParticipantDialog" Height="100" Width="350" WindowStyle="None" WindowStartupLocation="CenterOwner">
+        Title="AddParticipantDialog" Height="100" Width="350" WindowStyle="None" WindowStartupLocation="CenterOwner" Icon="../Resources/icon.png">
     <shell:WindowChrome.WindowChrome>
         <shell:WindowChrome
             ResizeBorderThickness="6"

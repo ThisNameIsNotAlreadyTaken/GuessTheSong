@@ -41,6 +41,10 @@ namespace GuessTheSong.Windows
             WinnerCombobox.SelectedIndex = 0;
         }
 
+        private void ShowSongInfo(object sender, RoutedEventArgs e)
+        {
+            new SongInfoDialog { DataContext = ((GameViewModel)DataContext).SelectedSong, Owner = this }.ShowDialog();
+        }
 
         private void OnWinnerChosen(object sender, SelectionChangedEventArgs e)
         {
@@ -52,7 +56,7 @@ namespace GuessTheSong.Windows
             dataContext.PriceWinner(combobox.SelectedItem as GameParticipant);
             combobox.IsEnabled = false;
 
-            new SongInfoDialog { DataContext = dataContext.SelectedSong, Owner = this}.ShowDialog();
+            ShowSongInfo(sender, e);
         }
     }
 }

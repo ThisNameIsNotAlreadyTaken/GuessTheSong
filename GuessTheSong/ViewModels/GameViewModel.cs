@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Threading;
 using GuessTheSong.Infrasctucture;
 using GuessTheSong.Models;
 
@@ -20,6 +21,22 @@ namespace GuessTheSong.ViewModels
         private readonly MediaPlayer _mediaPlayer = new MediaPlayer();
 
         private Song _selectedSong;
+
+        private void TimerEventHandler(object sender, EventArgs e)
+        {
+            NotifyPropertyChanged("TimerTick");
+        }
+
+        public string TimerTick
+        {
+            get
+            {
+                if (_mediaPlayer.Source != null && _mediaPlayer.NaturalDuration.HasTimeSpan)
+                    return string.Format("{0} / {1}", _mediaPlayer.Position.ToString(@"mm\:ss"), 
+                        _mediaPlayer.NaturalDuration.TimeSpan.ToString(@"mm\:ss"));
+                return "No file selected...";
+            }
+        }
 
         public Song SelectedSong
         {
@@ -49,6 +66,13 @@ namespace GuessTheSong.ViewModels
         {
             Participants = new ObservableCollection<GameParticipant>(participants);
             GameData = new ObservableCollection<Category>(gameData);
+
+            var timer = new DispatcherTimer
+            {
+                Interval = TimeSpan.FromSeconds(1)
+            };
+            timer.Tick += TimerEventHandler;
+            timer.Start();
         }
 
         public void SongChoose(Song song)
