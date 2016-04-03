@@ -109,9 +109,10 @@ namespace GuessTheSong.ViewModels
             NotifyPropertyChanged("IsStartButtonEnabled");
         }
 
-        public GameViewModel GetGameViewModel()
+        public Tuple<List<Category>,List<GameParticipant>> GetGameViewModelData()
         {
-            return new GameViewModel(GameData.ConvertAll(x => x.Clone()), Participants.ToList().ConvertAll(x => x.Clone()));
+            return new Tuple<List<Category>, List<GameParticipant>>(GameData.ConvertAll(x => x.Clone()),
+                Participants.ToList().ConvertAll(x => x.Clone()));
         }
     }
 }

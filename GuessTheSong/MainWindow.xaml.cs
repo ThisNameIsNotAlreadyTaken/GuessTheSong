@@ -10,9 +10,13 @@ namespace GuessTheSong
     /// </summary>
     public partial class MainWindow
     {
+        private readonly SettingsViewModel _viewModel;
+
         public MainWindow()
         {
             InitializeComponent();
+            _viewModel = new SettingsViewModel();
+            DataContext = _viewModel;
         }
 
         protected void MinimizeClick(object sender, RoutedEventArgs e)
@@ -40,7 +44,7 @@ namespace GuessTheSong
 
             if (!string.IsNullOrEmpty(response) && !string.IsNullOrWhiteSpace(response))
             {
-                ((SettingsViewModel)DataContext).AddParticipant(response);
+                _viewModel.AddParticipant(response);
             }
         }
 
@@ -48,13 +52,13 @@ namespace GuessTheSong
         {
             if (LbParticipants.SelectedItem != null)
             {
-                ((SettingsViewModel)DataContext).RemoveParticipant(LbParticipants.SelectedItem as GameParticipant);
+                _viewModel.RemoveParticipant(LbParticipants.SelectedItem as GameParticipant);
             }
         }
 
         private void StartTheGame_OnClick(object sender, RoutedEventArgs e)
         {
-           new GameWindow {DataContext = ((SettingsViewModel) DataContext).GetGameViewModel()}.Show();
+            new GameWindow(_viewModel.GetGameViewModelData()).Show();
         }
     }
 }

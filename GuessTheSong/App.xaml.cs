@@ -14,9 +14,9 @@ namespace GuessTheSong
     {
         private void Application_StartUp(object sender, StartupEventArgs e)
         {
-           new MainWindow { DataContext = new SettingsViewModel() }.Show();
+           new MainWindow().Show();
 
-          /*  var categories = Enumerable.Range(0, 10).Select(x => new Category()
+           /* var categories = Enumerable.Range(0, 10).Select(x => new Category()
             {
                 Name = "Category " + x,
                 Songs = Enumerable.Range(0,10).Select(y => new Song

@@ -72,7 +72,7 @@
                             <Grid>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="20*"></ColumnDefinition>
+                                        <ColumnDefinition Width="15*"></ColumnDefinition>
                                         <ColumnDefinition Width="80*"></ColumnDefinition>
                                     </Grid.ColumnDefinitions>
                                     <Grid.RowDefinitions>
@@ -87,7 +87,7 @@
                                             </ItemsPanelTemplate>
                                         </ListView.ItemsPanel>
                                         <ListView.ItemTemplate>
-                                            <DataTemplate>
+                                            <DataTemplate DataType="models:Song">
                                                 <Button CommandParameter="{Binding}" Click="SongButtonClick" Tag="{Binding}" 
                                                         IsEnabled="{Binding IsGuessed, Converter={StaticResource AntiBoolConverter}}"
                                                         MinWidth="100">
@@ -191,7 +191,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="90*"></RowDefinition>
                     <RowDefinition Height="2"></RowDefinition>
-                    <RowDefinition Height="10*"></RowDefinition>
+                    <RowDefinition Height="15*"></RowDefinition>
                 </Grid.RowDefinitions>
                 <ListBox ItemsSource="{Binding Source={StaticResource CvsParticipants}}" Grid.RowSpan="3"
                          ItemContainerStyle="{DynamicResource ParticipantListBoxItemContainerStyle}" />
@@ -199,40 +199,54 @@
                 <ListBox Grid.Row="0" Grid.Column="2" ItemsSource="{Binding Source={StaticResource CvsGameData}}" 
                          ItemContainerStyle="{DynamicResource GameDataListBoxItemContainerStyle}" />
                 <GridSplitter ResizeDirection="Rows" Grid.Row="1" Grid.Column="2" Height="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"  ShowsPreview="True" />
-                <StackPanel Grid.Row="2" Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" 
+                <StackPanel Grid.Row="2" Grid.Column="2" Orientation="Horizontal"
                             Visibility="{Binding SelectedSong, Converter={StaticResource NullVisibilityConverter}}">
-                    <Label>
-                        <Bold>
-                            <Label Content="{Binding SelectedSongPreviewName}" FontSize="30" FontFamily="Verdana"
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition Height="*"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Top">
+                            <Label>
+                                <Bold>
+                                    <Label Content="{Binding SelectedSongPreviewName}" FontSize="30" FontFamily="Verdana"
                            HorizontalContentAlignment="Center" Margin="5,0,5,0" />
-                        </Bold>
-                    </Label>
-                    <Label>
-                        <Bold>
-                            <Label Content="{Binding TimerTick}" FontSize="30" FontFamily="Verdana"
+                                </Bold>
+                            </Label>
+                            <Button Style="{StaticResource WindowColoredButtonStyle}" FontFamily="Segoe UI Symbol" 
+                                FontSize="30" Content="&#128129;" ToolTip="Show song info" VerticalAlignment="Center" Click="ShowSongInfo"/>
+                            <Button Content="Skip" FontSize="20" Click="SaveForLaterClick"  Margin="10,0,10,0"
+                                HorizontalAlignment="Center" VerticalAlignment="Center" Width="80"/>
+                        </StackPanel>
+                        <StackPanel Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Top">
+                            <Slider Margin="10,0,0,0" Width="200" VerticalAlignment="Center" Value="{Binding PlayerPosition}" 
+                                    Maximum="100" Minimum="0" />
+                            <Label>
+                                <Bold>
+                                    <Label Content="{Binding TimerTick}" FontSize="30" FontFamily="Verdana"
                            HorizontalContentAlignment="Center" Margin="5,0,5,0" />
-                        </Bold>
-                    </Label>
-                    <Button Content="Play" FontSize="20" Command="{Binding PlayCommand}"  Margin="0,0,10,0"
+                                </Bold>
+                            </Label>
+                            <Button Content="Play" FontSize="20" Command="{Binding PlayCommand}"  Margin="10,0,10,0"
                                 HorizontalAlignment="Center" VerticalAlignment="Center" Width="80"/>
-                    <Button Content="Pause" FontSize="20" Command="{Binding PauseCommand}" Margin="0,0,10,0"
+                            <Button Content="Pause" FontSize="20" Command="{Binding PauseCommand}" Margin="0,0,10,0"
                                 HorizontalAlignment="Center" VerticalAlignment="Center" Width="80"/>
-                    <Button Content="Stop" FontSize="20" Command="{Binding StopCommand}"
+                            <Button Content="Stop" FontSize="20" Command="{Binding StopCommand}"
                                 HorizontalAlignment="Center" VerticalAlignment="Center" Width="80" Margin="0,0,10,0"/>
-                    <ComboBox x:Name="WinnerCombobox" SelectedIndex="0" HorizontalAlignment="Center" VerticalAlignment="Center" DisplayMemberPath="Name"
+                            <ComboBox x:Name="WinnerCombobox" SelectedIndex="0" HorizontalAlignment="Center" VerticalAlignment="Center" DisplayMemberPath="Name"
                               SelectedValuePath="Name" SelectionChanged="OnWinnerChosen" Margin="0,0,10,0">
-                        <ComboBox.Resources>
-                            <CollectionViewSource x:Key="ParticipantsList" Source="{Binding Path=Participants}" />
-                        </ComboBox.Resources>
-                        <ComboBox.ItemsSource>
-                            <CompositeCollection>
-                                <models:GameParticipant Name="Select a winner" />
-                                <CollectionContainer Collection="{Binding Source={StaticResource ParticipantsList}}" />
-                            </CompositeCollection>
-                        </ComboBox.ItemsSource>
-                    </ComboBox>
-                    <Button Style="{StaticResource WindowColoredButtonStyle}" FontFamily="Segoe UI Symbol" 
-                      FontSize="30" Content="&#128129;" ToolTip="Show song info" VerticalAlignment="Center" Click="ShowSongInfo"/>
+                                <ComboBox.Resources>
+                                    <CollectionViewSource x:Key="ParticipantsList" Source="{Binding Path=Participants}" />
+                                </ComboBox.Resources>
+                                <ComboBox.ItemsSource>
+                                    <CompositeCollection>
+                                        <models:GameParticipant Name="Select a winner" />
+                                        <CollectionContainer Collection="{Binding Source={StaticResource ParticipantsList}}" />
+                                    </CompositeCollection>
+                                </ComboBox.ItemsSource>
+                            </ComboBox>
+                        </StackPanel>
+                    </Grid>
                 </StackPanel>
             </Grid>
         </Grid>
