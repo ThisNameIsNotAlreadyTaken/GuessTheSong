@@ -1,8 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using GuessTheSong.Models;
-using GuessTheSong.ViewModels;
 using GuessTheSong.Windows;
 
 namespace GuessTheSong
@@ -34,7 +34,7 @@ namespace GuessTheSong
                 Score = new Random().Next(10)*x
             }).ToList();
 
-          new GameWindow { DataContext = new GameViewModel(categories, participants) }.Show();*/
+          new GameWindow(new Tuple<List<Category>, List<GameParticipant>>(categories, participants)).Show();*/
         }
     }
 }
