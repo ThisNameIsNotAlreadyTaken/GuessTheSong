@@ -204,6 +204,7 @@
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition Height="Auto"></RowDefinition>
                             <RowDefinition Height="*"></RowDefinition>
                         </Grid.RowDefinitions>
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Top">
@@ -251,6 +252,10 @@
                             <Button Name="RemovePoints" Style="{StaticResource WindowColoredButtonStyle}" FontFamily="Segoe UI Symbol" 
                                 FontSize="30" Content="&#x2796;" Margin="0,5,10,0" ToolTip="Remove points" VerticalAlignment="Top"
                                 Click="RemovePointsClick"/>
+                        </StackPanel>
+                        <StackPanel Grid.Row="2" Orientation="Horizontal" VerticalAlignment="Top">
+                            <TextBox Name="ConsoleTextBox" Margin="10,0,0,0" Width="500" ToolTip="Add/Remove/Set/Lock/Unlock CategoryNo/ParticipantNo Price/Points"></TextBox>
+                            <Button Name="ProcessConsoleCommand" Margin="10,0,0,0" Click="ProcessConsoleCommandClick">Process command</Button>
                         </StackPanel>
                     </Grid>
                 </StackPanel>
