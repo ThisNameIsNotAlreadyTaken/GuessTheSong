@@ -48,6 +48,9 @@ namespace GuessTheSong.Windows
 
             WinnerCombobox.IsEnabled = true;
             WinnerCombobox.SelectedIndex = 0;
+
+            AddPoints.IsEnabled = true;
+            RemovePoints.IsEnabled = true;
         }
 
         private void ShowSongInfo(object sender, RoutedEventArgs e)
@@ -55,17 +58,20 @@ namespace GuessTheSong.Windows
             new SongInfoDialog { DataContext = _viewModel.SelectedSong, Owner = this }.ShowDialog();
         }
 
-        private void OnWinnerChosen(object sender, SelectionChangedEventArgs e)
+        private void AddPointsClick(object sender, RoutedEventArgs e)
         {
-            var combobox = (ComboBox) sender;
-
-            if (combobox.SelectedIndex == 0) return;
-
-            _viewModel.PriceWinner(combobox.SelectedItem as GameParticipant);
-
-            combobox.IsEnabled = false;
-
+            if (WinnerCombobox.SelectedIndex == 0) return;
+            _viewModel.PriceWinner(WinnerCombobox.SelectedItem as GameParticipant);
+            WinnerCombobox.IsEnabled = false;
+            AddPoints.IsEnabled = false;
+            RemovePoints.IsEnabled = false;
             ShowSongInfo(sender, e);
+        }
+
+        private void RemovePointsClick(object sender, RoutedEventArgs e)
+        {
+            if (WinnerCombobox.SelectedIndex == 0) return;
+            _viewModel.PunishWinner(WinnerCombobox.SelectedItem as GameParticipant);
         }
 
         private void SaveForLaterClick(object sender, RoutedEventArgs e)

@@ -15,6 +15,13 @@ namespace GuessTheSong.ViewModels
     {
         private List<Category> _gameData;
 
+        private static readonly List<string> ExtensionsList = new List<string>()
+        {
+            ".mp3",
+            ".wav",
+            "wma"
+        };
+
         public List<Category> GameData
         {
             get
@@ -45,7 +52,7 @@ namespace GuessTheSong.ViewModels
 
             if (Directory.Exists(vm.SelectedFolder.Path))
             {
-               var newCategories = Directory.GetDirectories(vm.SelectedFolder.Path).ToList().Select(d =>
+                  var newCategories = Directory.GetDirectories(vm.SelectedFolder.Path).ToList().Select(d =>
                 {
                     var category = new Category()
                     {
@@ -53,13 +60,13 @@ namespace GuessTheSong.ViewModels
                     };
 
                     var songs = Directory.GetFiles(d, "*", SearchOption.TopDirectoryOnly).ToList()
-                        .Where(x => x.EndsWith(".mp3")).Select(f =>
+                        .Where(x => ExtensionsList.Any(y => x.EndsWith(y, StringComparison.OrdinalIgnoreCase))).Select(f =>
                         {
                             var name = f.Substring(f.LastIndexOf("\\", StringComparison.Ordinal) + 1);
                             var info = name.Split(new []{"--"}, StringSplitOptions.None);
 
                             var artistName = info.Length > 1 ? info[1].Trim() : null;
-                            var songName = info.Length > 2 ? info[2].Trim().Replace(".mp3", "") : null;
+                            var songName = info.Length > 2 ? info[2].Trim().Substring(0, info[2].LastIndexOf(".", StringComparison.Ordinal) - 1) : null;
 
                             var price = 0;
 
@@ -75,7 +82,7 @@ namespace GuessTheSong.ViewModels
                                     FullPath = f
                                 }
                             };
-                        }).ToList();
+                        }).OrderBy(x => x.Price).ToList();
 
                     category.Songs = songs;
 

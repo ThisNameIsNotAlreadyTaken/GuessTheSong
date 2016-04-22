@@ -72,13 +72,13 @@
                             <Grid>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="15*"></ColumnDefinition>
+                                        <ColumnDefinition Width="20*"></ColumnDefinition>
                                         <ColumnDefinition Width="80*"></ColumnDefinition>
                                     </Grid.ColumnDefinitions>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*" />
                                     </Grid.RowDefinitions>
-                                    <TextBlock TextWrapping="Wrap" FontSize="23" HorizontalAlignment="Left" FontFamily="Verdana" MaxWidth="150"
+                                    <TextBlock TextWrapping="Wrap" FontSize="23" HorizontalAlignment="Left" FontFamily="Verdana" MaxWidth="220"
                                            Text="{Binding Name}" Margin="10,0,0,0" VerticalAlignment="Center" />
                                     <ListView Grid.Column="1" ItemsSource="{Binding Songs}" BorderThickness="0" Margin="10,0,0,0">
                                         <ListView.ItemsPanel>
@@ -233,8 +233,8 @@
                                 HorizontalAlignment="Center" VerticalAlignment="Center" Width="80"/>
                             <Button Content="Stop" FontSize="20" Command="{Binding StopCommand}"
                                 HorizontalAlignment="Center" VerticalAlignment="Center" Width="80" Margin="0,0,10,0"/>
-                            <ComboBox x:Name="WinnerCombobox" SelectedIndex="0" HorizontalAlignment="Center" VerticalAlignment="Center" DisplayMemberPath="Name"
-                              SelectedValuePath="Name" SelectionChanged="OnWinnerChosen" Margin="0,0,10,0">
+                            <ComboBox x:Name="WinnerCombobox" SelectedIndex="0" HorizontalAlignment="Center" 
+                                      VerticalAlignment="Center" DisplayMemberPath="Name" SelectedValuePath="Name" Margin="0,0,10,0">
                                 <ComboBox.Resources>
                                     <CollectionViewSource x:Key="ParticipantsList" Source="{Binding Path=Participants}" />
                                 </ComboBox.Resources>
@@ -245,6 +245,12 @@
                                     </CompositeCollection>
                                 </ComboBox.ItemsSource>
                             </ComboBox>
+                            <Button Name="AddPoints" Style="{StaticResource WindowColoredButtonStyle}" FontFamily="Segoe UI Symbol" 
+                                FontSize="30" Content="&#x2795;" Margin="0,5,10,0" ToolTip="Add points" VerticalAlignment="Top"
+                                Click="AddPointsClick"/>
+                            <Button Name="RemovePoints" Style="{StaticResource WindowColoredButtonStyle}" FontFamily="Segoe UI Symbol" 
+                                FontSize="30" Content="&#x2796;" Margin="0,5,10,0" ToolTip="Remove points" VerticalAlignment="Top"
+                                Click="RemovePointsClick"/>
                         </StackPanel>
                     </Grid>
                 </StackPanel>

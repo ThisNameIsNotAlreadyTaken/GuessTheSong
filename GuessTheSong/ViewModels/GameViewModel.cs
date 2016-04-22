@@ -106,6 +106,12 @@ namespace GuessTheSong.ViewModels
             SelectedSong.IsGuessed = true;
         }
 
+        public void PunishWinner(GameParticipant participant)
+        {
+            Pause();
+            participant.Score -= SelectedSong.Price;
+        }
+
         private void Play()
         {
             _mediaPlayer.Play();
