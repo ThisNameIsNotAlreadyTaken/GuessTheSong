@@ -20,6 +20,7 @@
     <Window.Resources>
         <converters:AntiBoolConverter x:Key="AntiBoolConverter" />
         <converters:NullVisibilityConverter x:Key="NullVisibilityConverter" />
+        <converters:SongToButtonColorConverter x:Key="SongToButtonColorConverter" />
 
         <CollectionViewSource x:Key="CvsParticipants" Source="{Binding Participants}" IsLiveSortingRequested="True">
             <CollectionViewSource.SortDescriptions>
@@ -90,16 +91,18 @@
                                             <DataTemplate DataType="models:Song">
                                                 <Button CommandParameter="{Binding}" Click="SongButtonClick" Tag="{Binding}" 
                                                         IsEnabled="{Binding IsGuessed, Converter={StaticResource AntiBoolConverter}}"
-                                                        MinWidth="100">
+                                                        MinWidth="100" ToolTip="Click to play">
                                                     <Button.Style>
                                                         <Style TargetType="Button">
-                                                            <Setter Property="Background" Value="PaleGreen" />
-                                                            <Style.Triggers>
-                                                                <Trigger Property="IsEnabled" Value="False">
-                                                                    <Setter Property="ToolTip" Value="Click to play"></Setter>
-                                                                    <Setter Property="Background" Value="LightCoral" />
-                                                                </Trigger>
-                                                            </Style.Triggers>
+                                                            <Setter Property="Background">
+                                                                <Setter.Value>
+                                                                    <MultiBinding Converter="{StaticResource SongToButtonColorConverter}">
+                                                                    <Binding Path="IsGuessed"></Binding>
+                                                                    <Binding Path="IsSelected"></Binding>
+                                                                    <Binding Path="IsDelayed"></Binding>
+                                                                </MultiBinding>
+                                                                </Setter.Value>
+                                                            </Setter>
                                                         </Style>
                                                     </Button.Style>
                                                     <Button.Content>

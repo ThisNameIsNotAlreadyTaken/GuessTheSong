@@ -91,7 +91,14 @@ namespace GuessTheSong.ViewModels
         {
             if (song == null) return;
 
+            if (SelectedSong != null)
+            {
+                SelectedSong.IsSelected = false;
+            }
+
             SelectedSong = song;
+            SelectedSong.IsSelected = true;
+            SelectedSong.IsDelayed = false;
 
             if (!File.Exists(SelectedSong.File.FullPath)) return;
 

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 using GuessTheSong.Models;
 using GuessTheSong.ViewModels;
 
@@ -43,7 +42,6 @@ namespace GuessTheSong.Windows
         private void SongButtonClick(object sender, RoutedEventArgs e)
         {
             _currentSelectionButton = (Button)sender;
-            _currentSelectionButton.Background = new SolidColorBrush(Colors.Gold);
 
             _viewModel.SongChoose(_currentSelectionButton.Tag as Song);
 
@@ -66,7 +64,6 @@ namespace GuessTheSong.Windows
             WinnerCombobox.IsEnabled = false;
             AddPoints.IsEnabled = false;
             RemovePoints.IsEnabled = false;
-            _currentSelectionButton.Background = new SolidColorBrush(Colors.PaleGreen);
             ShowSongInfo(sender, e);
         }
 
@@ -78,7 +75,12 @@ namespace GuessTheSong.Windows
 
         private void SaveForLaterClick(object sender, RoutedEventArgs e)
         {
-            _currentSelectionButton.Background = new SolidColorBrush(Colors.DarkSalmon);
+            var song = _currentSelectionButton.Tag as Song;
+
+            if (song != null)
+            {
+                song.IsDelayed = true;
+            }
 
             WinnerCombobox.IsEnabled = false;
 

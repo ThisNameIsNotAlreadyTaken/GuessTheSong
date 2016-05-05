@@ -24,6 +24,30 @@ namespace GuessTheSong.Models
             }
         }
 
+        private bool _isSelected;
+
+        public bool IsSelected
+        {
+            get { return _isSelected; }
+            set
+            {
+                _isSelected = value;
+                NotifyPropertyChanged("IsSelected");
+            }
+        }
+
+        private bool _isDelayed;
+
+        public bool IsDelayed
+        {
+            get { return _isDelayed; }
+            set
+            {
+                _isDelayed = value;
+                NotifyPropertyChanged("IsDelayed");
+            }
+        }
+
         public Song Clone()
         {
             return new Song
@@ -32,7 +56,9 @@ namespace GuessTheSong.Models
                 ArtistName = (string) ArtistName.Clone(),
                 Price = Price,
                 File = File.Clone(),
-                IsGuessed = false
+                IsGuessed = false,
+                IsSelected = false,
+                IsDelayed = false
             };
         }
     }

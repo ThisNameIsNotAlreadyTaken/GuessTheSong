@@ -92,6 +92,7 @@
     <Compile Include="Infrasctucture\Converters\NullCollapsedVisibilityConverter.cs" />
     <Compile Include="Infrasctucture\Converters\NullToUnknownStringConverter.cs" />
     <Compile Include="Infrasctucture\Converters\NullVisibilityConverter.cs" />
+    <Compile Include="Infrasctucture\Converters\SongToButtonColorConverter.cs" />
     <Compile Include="Infrasctucture\DelegateCommand.cs" />
     <Compile Include="Infrasctucture\DelegateParametrizedCommand.cs" />
     <Compile Include="Infrasctucture\ICloneable.cs" />
