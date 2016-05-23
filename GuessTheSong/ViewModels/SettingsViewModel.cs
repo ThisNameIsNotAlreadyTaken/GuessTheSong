@@ -8,21 +8,33 @@ using Gat.Controls;
 using GuessTheSong.Infrasctucture;
 using GuessTheSong.Models;
 using System.IO;
+using GuessTheSong.Helpers;
+using GuessTheSong.Windows;
+using GuessTheSong.Windows.Dialogs;
 
 namespace GuessTheSong.ViewModels
 {
     public class SettingsViewModel : ObservableObject
     {
-        private List<Category> _gameData;
+        #region Properties
 
-        private static readonly List<string> ExtensionsList = new List<string>()
+        private GameData _gameData;
+        private bool _isMultipleRoundGame;
+
+        public bool IsMultipleRoundGame
         {
-            ".mp3",
-            ".wav",
-            "wma"
-        };
+            get
+            {
+                return _isMultipleRoundGame;
+            }
+            set
+            {
+                _isMultipleRoundGame = value;
+                NotifyPropertyChanged("IsMultipleRoundGame");
+            }
+        }
 
-        public List<Category> GameData
+        public GameData CurrentGameData
         {
             get
             {
@@ -31,13 +43,25 @@ namespace GuessTheSong.ViewModels
             set
             {
                 _gameData = value;
-                NotifyPropertyChanged("GameData");
+                NotifyPropertyChanged("CurrentGameData");
             }
         }
 
         public ObservableCollection<GameParticipant> Participants { get; set; } = new ObservableCollection<GameParticipant>();
 
-        public bool IsStartButtonEnabled => GameData != null && GameData.Any() && Participants.Any();
+        public bool IsStartButtonEnabled => CurrentGameData?.Rounds != null && CurrentGameData.Rounds.Any() && Participants.Any();
+
+        #endregion
+
+        #region Commands
+
+        public ICommand LoadFileCommand => new DelegateCommand(LoadFile);
+
+        public ICommand RemoveParticipantCommand => new DelegateParametrizedCommand<GameParticipant>(RemoveParticipant);
+
+        public ICommand AddParticipantCommand => new DelegateParametrizedCommand<MainWindow>(AddParticipant);
+
+        public ICommand StartGameCommand => new DelegateCommand(StartGame);
 
         private void LoadFile()
         {
@@ -48,62 +72,53 @@ namespace GuessTheSong.ViewModels
 
             if (vm.Show() != true) return;
 
-            GameData = null;
+            CurrentGameData = null;
 
             if (Directory.Exists(vm.SelectedFolder.Path))
             {
-                  var newCategories = Directory.GetDirectories(vm.SelectedFolder.Path).ToList().Select(d =>
+                var scanedData = ScanHelper.GetGameDataFromDirectory(vm.SelectedFolder.Path, IsMultipleRoundGame);
+
+                if (!scanedData.WarningNotes.IsNullOrEmpty())
                 {
-                    var category = new Category()
+                    var warningDialog = new WarningsDialog(scanedData.WarningNotes);
+
+                    warningDialog.ShowDialog();
+
+                    if (warningDialog.DialogResult == true)
                     {
-                        Name = d.Substring(d.LastIndexOf("\\", StringComparison.Ordinal) + 1)
-                    };
-
-                    var songs = Directory.GetFiles(d, "*", SearchOption.TopDirectoryOnly).ToList()
-                        .Where(x => ExtensionsList.Any(y => x.EndsWith(y, StringComparison.OrdinalIgnoreCase))).Select(f =>
-                        {
-                            var name = f.Substring(f.LastIndexOf("\\", StringComparison.Ordinal) + 1);
-                            var info = name.Split(new []{"--"}, StringSplitOptions.None);
-
-                            var artistName = info.Length > 1 ? info[1].Trim() : null;
-                            var songName = info.Length > 2 ? info[2].Trim().Substring(0, info[2].LastIndexOf(".", StringComparison.Ordinal) - 1) : null;
-
-                            var price = 0;
-
-                            if (info.Length > 0) int.TryParse(info[0].Trim(), out price);
-
-                            return new Song
-                            {
-                                ArtistName = artistName,
-                                Name = songName,
-                                Price = price,
-                                File = new SongFile
-                                {
-                                    FullPath = f
-                                }
-                            };
-                        }).OrderBy(x => x.Price).ToList();
-
-                    category.Songs = songs;
-
-                    return category;
-                }).ToList();
-
-                if (newCategories.Any()) GameData = newCategories;
+                        CurrentGameData = scanedData;
+                    }
+                }
+                else
+                {
+                    CurrentGameData = scanedData;
+                }
             }
 
             NotifyPropertyChanged("IsStartButtonEnabled");
         }
 
-        public ICommand LoadFileCommand => new DelegateCommand(LoadFile);
-
-        public void AddParticipant(string name)
+        private void StartGame()
         {
-            if (Participants.FirstOrDefault(x => x.Name == name) == null)
+            var tuple = new Tuple<GameData, List<GameParticipant>>(CurrentGameData.Clone(), Participants.ToList().ConvertAll(x => x.Clone()));
+            new GameWindow(tuple).Show();
+        }
+
+        private void AddParticipant(MainWindow window)
+        {
+            var dialog = new AddParticipantDialog { Owner = window };
+
+            if (dialog.ShowDialog() != true) return;
+
+            var response = dialog.ResponseText;
+
+            if (string.IsNullOrEmpty(response) || string.IsNullOrWhiteSpace(response)) return;
+
+            if (Participants.FirstOrDefault(x => x.Name == response) == null)
             {
                 Participants.Add(new GameParticipant
                 {
-                    Name = name
+                    Name = response
                 });
             }
 
@@ -116,10 +131,6 @@ namespace GuessTheSong.ViewModels
             NotifyPropertyChanged("IsStartButtonEnabled");
         }
 
-        public Tuple<List<Category>,List<GameParticipant>> GetGameViewModelData()
-        {
-            return new Tuple<List<Category>, List<GameParticipant>>(GameData.ConvertAll(x => x.Clone()),
-                Participants.ToList().ConvertAll(x => x.Clone()));
-        }
+        #endregion
     }
 }

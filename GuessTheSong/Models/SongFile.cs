@@ -14,6 +14,8 @@ namespace GuessTheSong.Models
         public string FileNameWithoutExtension
             => FileName.Substring(0, FileName.LastIndexOf(".", StringComparison.Ordinal));
 
+        public Exception ParsingException { get; set; }
+
         public SongFile Clone()
         {
             return new SongFile

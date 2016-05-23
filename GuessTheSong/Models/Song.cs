@@ -10,6 +10,8 @@ namespace GuessTheSong.Models
 
         public int Price { get; set; }
 
+        public string CategoryName { get; set; }
+
         public SongFile File { get; set; }
 
         private bool _isGuessed;
@@ -54,6 +56,7 @@ namespace GuessTheSong.Models
             {
                 Name = (string) Name.Clone(),
                 ArtistName = (string) ArtistName.Clone(),
+                CategoryName = (string)CategoryName.Clone(),
                 Price = Price,
                 File = File.Clone(),
                 IsGuessed = false,

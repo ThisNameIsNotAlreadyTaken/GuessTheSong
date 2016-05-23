@@ -1,6 +1,10 @@
 ﻿<Application x:Class="GuessTheSong.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:converters="clr-namespace:GuessTheSong.Infrasctucture.Converters"
+             xmlns:boolConverters="clr-namespace:GuessTheSong.Infrasctucture.Converters.BoolConverters"
+             xmlns:nullConverters="clr-namespace:GuessTheSong.Infrasctucture.Converters.NullConverters"
+             xmlns:stringConverters="clr-namespace:GuessTheSong.Infrasctucture.Converters.StringConverters"
              Startup="Application_StartUp"
              ShutdownMode="OnMainWindowClose">
     <Application.Resources>
@@ -8,79 +12,39 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Themes/Metro/Metro.MSControls.Core.Implicit.xaml" />
                 <ResourceDictionary Source="Themes/Metro/Metro.MSControls.Toolkit.Implicit.xaml" />
+                <ResourceDictionary Source="/Resources/Themes/Accents/Blue.xaml" />
+                <ResourceDictionary Source="/Resources/Themes/Light.xaml" />
+                <ResourceDictionary Source="/Resources/Styles/Icons.xaml" />
+                <ResourceDictionary Source="/Resources/Styles/MenuStyles.xaml" />
+                <ResourceDictionary Source="/Resources/Styles/WindowButtons.xaml" />
+                <ResourceDictionary Source="/Resources/Styles/ListBoxStyles.xaml" />
+                <ResourceDictionary Source="/Resources/Styles/AudioControlStyles.xaml" />
+                <ResourceDictionary Source="/Resources/Styles/SliderStyles.xaml" />
+                <ResourceDictionary Source="/Resources/Styles/ScrollbarStyles.xaml" />
+                <ResourceDictionary Source="/Resources/Styles/TextBoxStyles.xaml" />
+                <ResourceDictionary Source="/Resources/Styles/ButtonStyles.xaml" />
+                <ResourceDictionary Source="/Resources/Styles/CheckBoxStyles.xaml" />
+                <ResourceDictionary Source="/Resources/Styles/TabControlStyles.xaml" />
+                <ResourceDictionary Source="/Resources/Styles/Styles.xaml" />
+                <ResourceDictionary>
+                    <nullConverters:NullToCollapsedVisibilityConverter x:Key="NullToCollapsedVisibilityConverter" />
+                    <nullConverters:AntiNullToCollapsedVisibilityConverter x:Key="AntiNullToCollapsedVisibilityConverter" />
+                    <nullConverters:NullToBoolConverter x:Key="NullToBoolConverter" />
+                    <nullConverters:NullToUnknownStringConverter x:Key="NullToUnknownStringConverter" />
+                    <nullConverters:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
+
+                    <stringConverters:StringToUpperConverter x:Key="StringToUpperConverter" />
+                    <stringConverters:StringToUpperWithNullReplacingConverter x:Key="StringToUpperWithNullReplacingConverter" />
+
+                    <boolConverters:AntiBoolConverter x:Key="AntiBoolConverter" />
+                    <boolConverters:BoolToCollapsedVisibilityConverter x:Key="BoolToCollapsedVisibilityConverter" />
+
+                    <converters:SongToButtonColorConverter x:Key="SongToButtonColorConverter" />
+                    <converters:EnumBoolConverter x:Key="EnumBoolConverter" />
+                    <converters:AudioTimeSpanConverter x:Key="AudioTimeSpanConverter" />
+                    <converters:IntToStringConverter x:Key="IntToStringConverter" />
+                </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
-
-            <!--  Button styles -->
-            <Style TargetType="{x:Type Button}" x:Key="WindowButtonStyle">
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="{x:Type ButtonBase}">
-                            <Border
-                            x:Name="Chrome"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            Margin="0"
-                            Background="{TemplateBinding Background}"
-                            SnapsToDevicePixels="True">
-                                <ContentPresenter
-                                ContentTemplate="{TemplateBinding ContentTemplate}"
-                                Content="{TemplateBinding Content}"
-                                ContentStringFormat="{TemplateBinding ContentStringFormat}"
-                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                Margin="{TemplateBinding Padding}"
-                                RecognizesAccessKey="True"
-                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
-                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
-                            </Border>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-                <Setter Property="Background" Value="Transparent"/>
-                <Setter Property="FontFamily" Value="Webdings"/>
-                <Setter Property="FontSize" Value="13.333" />
-                <Setter Property="Foreground" Value="White" />
-                <Setter Property="Margin" Value="0,2,3,0"/>
-                <Style.Triggers>
-                    <Trigger Property="IsMouseOver" Value="True">
-                        <Setter Property="Foreground" Value="Gray" />
-                    </Trigger>
-                </Style.Triggers>
-            </Style>
-
-            <Style TargetType="{x:Type Button}" x:Key="WindowColoredButtonStyle">
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="{x:Type ButtonBase}">
-                            <Border
-                            x:Name="Chrome"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            Margin="0"
-                            Background="{TemplateBinding Background}"
-                            SnapsToDevicePixels="True">
-                                <ContentPresenter
-                                ContentTemplate="{TemplateBinding ContentTemplate}"
-                                Content="{TemplateBinding Content}"
-                                ContentStringFormat="{TemplateBinding ContentStringFormat}"
-                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                Margin="{TemplateBinding Padding}"
-                                RecognizesAccessKey="True"
-                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
-                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
-                            </Border>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-                <Setter Property="Background" Value="Transparent"/>
-                <Setter Property="FontFamily" Value="Webdings"/>
-                <Setter Property="FontSize" Value="13.333" />
-                <Setter Property="Foreground" Value="#800080" />
-                <Setter Property="Margin" Value="0,2,3,0"/>
-                <Style.Triggers>
-                    <Trigger Property="IsMouseOver" Value="True">
-                        <Setter Property="Foreground" Value="Gray" />
-                    </Trigger>
-                </Style.Triggers>
-            </Style>
-
         </ResourceDictionary>
     </Application.Resources>
 </Application>

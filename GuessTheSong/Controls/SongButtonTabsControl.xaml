@@ -1,0 +1,97 @@
+﻿<UserControl x:Class="GuessTheSong.Controls.SongButtonTabsControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:m="clr-namespace:GuessTheSong.Models"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.DataContext>
+        <m:GameData />
+    </UserControl.DataContext>
+    <Grid Margin="10,10,10,10">
+        <TabControl Margin="0,4.5,0,0" ItemsSource="{Binding Rounds}" Style="{StaticResource CommonTabControlStyle}"
+                    ItemContainerStyle="{StaticResource CommonTabItemStyle}" SelectedIndex="0">
+            <TabControl.ItemTemplate>
+                <DataTemplate DataType="{x:Type m:GameRound}">
+                    <TextBlock Text="{Binding Name}" />
+                </DataTemplate>
+            </TabControl.ItemTemplate>
+            <TabControl.ContentTemplate>
+                <DataTemplate DataType="{x:Type m:GameRound}">
+                    <ListBox ItemsSource="{Binding Categories}" ScrollViewer.HorizontalScrollBarVisibility="Auto" 
+                             Style="{StaticResource CommonListBoxStyle}" HorizontalContentAlignment="Stretch"
+                             Padding="0,0,0,10" BorderBrush="White">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate DataType="{x:Type m:Category}">
+                                <ListBoxItem Background="Transparent" 
+                                             HorizontalContentAlignment="{Binding HorizontalContentAlignment, 
+                                                RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"
+                                             VerticalContentAlignment="{Binding VerticalContentAlignment, 
+                                                RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}">
+                                    <Border SnapsToDevicePixels="true" BorderThickness="0" Background="Transparent">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="20*" />
+                                                <ColumnDefinition Width="80*" />
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="*" />
+                                            </Grid.RowDefinitions>
+                                            <TextBlock TextWrapping="Wrap" FontSize="23" MaxWidth="220" TextTrimming="CharacterEllipsis"
+                                                       HorizontalAlignment="Left" FontFamily="Verdana"
+                                                       Text="{Binding Name}" Margin="3,0,0,0" VerticalAlignment="Center" />
+                                            <ListView Grid.Column="1" ItemsSource="{Binding Songs}" BorderThickness="0" Margin="10,0,0,0">
+                                                <ListView.ItemsPanel>
+                                                    <ItemsPanelTemplate>
+                                                        <StackPanel Orientation="Horizontal" />
+                                                    </ItemsPanelTemplate>
+                                                </ListView.ItemsPanel>
+                                                <ListView.ItemTemplate>
+                                                    <DataTemplate DataType="m:Song">
+                                                        <Button CommandParameter="{Binding}" Tag="{Binding}" 
+                                                                ContextMenuService.ShowOnDisabled="True"
+                                                                IsEnabled="{Binding IsGuessed, Converter={StaticResource AntiBoolConverter}}"
+                                                                Click="ButtonClick" MinWidth="100" ToolTip="Click to play">
+                                                            <Button.Style>
+                                                                <Style TargetType="Button">
+                                                                    <Setter Property="Background">
+                                                                        <Setter.Value>
+                                                                            <MultiBinding Converter="{StaticResource SongToButtonColorConverter}">
+                                                                                <Binding Path="IsGuessed"></Binding>
+                                                                                <Binding Path="IsSelected"></Binding>
+                                                                                <Binding Path="IsDelayed"></Binding>
+                                                                            </MultiBinding>
+                                                                        </Setter.Value>
+                                                                    </Setter>
+                                                                </Style>
+                                                            </Button.Style>
+                                                            <Button.ContextMenu>
+                                                                <ContextMenu>
+                                                                    <MenuItem Style="{StaticResource StyledMenuItem}" Header="Lock" Click="LockButton"/>
+                                                                    <MenuItem Style="{StaticResource StyledMenuItem}" Header="Unlock" Click="UnlockButton"/>
+                                                                    <MenuItem Style="{StaticResource StyledMenuItem}" Header="Skip" Click="SkipButton"/>
+                                                                </ContextMenu>
+                                                            </Button.ContextMenu>
+                                                            <Button.Content>
+                                                                <Label>
+                                                                    <Bold>
+                                                                        <TextBlock FontSize="25" Text="{Binding Price}" />
+                                                                    </Bold>
+                                                                </Label>
+                                                            </Button.Content>
+                                                        </Button>
+                                                    </DataTemplate>
+                                                </ListView.ItemTemplate>
+                                            </ListView>
+                                        </Grid>
+                                    </Border>
+                                </ListBoxItem>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </DataTemplate>
+            </TabControl.ContentTemplate>
+        </TabControl>
+    </Grid>
+</UserControl>

@@ -1,129 +1,23 @@
-﻿<Window x:Class="GuessTheSong.Windows.GameWindow"
+﻿<layout:WindowBase x:Class="GuessTheSong.Windows.GameWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:shell="http://schemas.microsoft.com/winfx/2006/xaml/presentation/shell"
-        xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
-        xmlns:converters="clr-namespace:GuessTheSong.Infrasctucture.Converters"
+        xmlns:controls="clr-namespace:GuessTheSong.Controls"
+        xmlns:layout="clr-namespace:GuessTheSong.Layout"
         xmlns:models="clr-namespace:GuessTheSong.Models"
+        xmlns:windows="clr-namespace:GuessTheSong.Windows"
         mc:Ignorable="d"
-        Title="GameWindow" WindowState="Maximized" WindowStartupLocation="CenterScreen" Icon="../Resources/icon.png">
+        Title="GameWindow" WindowState="Normal" WindowStartupLocation="CenterScreen" Icon="../icon.ico">
     <shell:WindowChrome.WindowChrome>
         <shell:WindowChrome
             ResizeBorderThickness="6"
-            CaptionHeight="60"
+            CaptionHeight="40"
             CornerRadius="0,0,0,0"
             GlassFrameThickness="0">
         </shell:WindowChrome>
     </shell:WindowChrome.WindowChrome>
-    <Window.Resources>
-        <converters:AntiBoolConverter x:Key="AntiBoolConverter" />
-        <converters:NullVisibilityConverter x:Key="NullVisibilityConverter" />
-        <converters:SongToButtonColorConverter x:Key="SongToButtonColorConverter" />
-
-        <CollectionViewSource x:Key="CvsParticipants" Source="{Binding Participants}" IsLiveSortingRequested="True">
-            <CollectionViewSource.SortDescriptions>
-                <componentModel:SortDescription PropertyName="Score" Direction="Descending" />
-            </CollectionViewSource.SortDescriptions>
-        </CollectionViewSource>
-
-        <CollectionViewSource x:Key="CvsGameData" Source="{Binding GameData}" />
-
-        <Style x:Key="ParticipantListBoxItemContainerStyle" TargetType="{x:Type ListBoxItem}">
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="HorizontalContentAlignment" Value="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
-            <Setter Property="VerticalContentAlignment" Value="{Binding VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
-            <Setter Property="Padding" Value="2,0,0,0"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type ListBoxItem}">
-                        <Border x:Name="Bd" BorderBrush="{TemplateBinding BorderBrush}" 
-                                BorderThickness="{TemplateBinding BorderThickness}" 
-                                Background="{TemplateBinding Background}" 
-                                Padding="{TemplateBinding Padding}" SnapsToDevicePixels="true">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition></ColumnDefinition>
-                                    <ColumnDefinition></ColumnDefinition>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock TextWrapping="Wrap" FontSize="23" HorizontalAlignment="Left" FontFamily="Verdana"
-                                           Text="{Binding Name}" Margin="10,0,0,0"/>
-                                <TextBlock Grid.Column="1" TextWrapping="Wrap" FontSize="23" HorizontalAlignment="Right" FontFamily="Verdana"
-                                           Text="{Binding Score}" Margin="0,0,10,0"/>
-                            </Grid>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <Style x:Key="GameDataListBoxItemContainerStyle" TargetType="{x:Type ListBoxItem}">
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="HorizontalContentAlignment" Value="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
-            <Setter Property="VerticalContentAlignment" Value="{Binding VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
-            <Setter Property="Padding" Value="2,0,0,0"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type ListBoxItem}">
-                        <Border x:Name="Bd" BorderBrush="{TemplateBinding BorderBrush}" 
-                                BorderThickness="{TemplateBinding BorderThickness}" 
-                                Background="{TemplateBinding Background}" 
-                                Padding="{TemplateBinding Padding}" SnapsToDevicePixels="true">
-                            <Grid>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="20*"></ColumnDefinition>
-                                        <ColumnDefinition Width="80*"></ColumnDefinition>
-                                    </Grid.ColumnDefinitions>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="*" />
-                                    </Grid.RowDefinitions>
-                                    <TextBlock TextWrapping="Wrap" FontSize="23" HorizontalAlignment="Left" FontFamily="Verdana" MaxWidth="220"
-                                           Text="{Binding Name}" Margin="10,0,0,0" VerticalAlignment="Center" />
-                                    <ListView Grid.Column="1" ItemsSource="{Binding Songs}" BorderThickness="0" Margin="10,0,0,0">
-                                        <ListView.ItemsPanel>
-                                            <ItemsPanelTemplate>
-                                                <StackPanel Orientation="Horizontal"></StackPanel>
-                                            </ItemsPanelTemplate>
-                                        </ListView.ItemsPanel>
-                                        <ListView.ItemTemplate>
-                                            <DataTemplate DataType="models:Song">
-                                                <Button CommandParameter="{Binding}" Click="SongButtonClick" Tag="{Binding}" 
-                                                        IsEnabled="{Binding IsGuessed, Converter={StaticResource AntiBoolConverter}}"
-                                                        MinWidth="100" ToolTip="Click to play">
-                                                    <Button.Style>
-                                                        <Style TargetType="Button">
-                                                            <Setter Property="Background">
-                                                                <Setter.Value>
-                                                                    <MultiBinding Converter="{StaticResource SongToButtonColorConverter}">
-                                                                    <Binding Path="IsGuessed"></Binding>
-                                                                    <Binding Path="IsSelected"></Binding>
-                                                                    <Binding Path="IsDelayed"></Binding>
-                                                                </MultiBinding>
-                                                                </Setter.Value>
-                                                            </Setter>
-                                                        </Style>
-                                                    </Button.Style>
-                                                    <Button.Content>
-                                                        <Label>
-                                                            <Bold>
-                                                                <TextBlock FontSize="25" Text="{Binding Price}"></TextBlock>
-                                                            </Bold>
-                                                        </Label>
-                                                    </Button.Content>
-                                                </Button>
-                                            </DataTemplate>
-                                        </ListView.ItemTemplate>
-                                    </ListView>
-                                </Grid>
-                            </Grid>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-    </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -133,12 +27,11 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Border Grid.RowSpan="2" BorderThickness="1" BorderBrush="Silver">
+        <Border Grid.RowSpan="2" BorderThickness="1" BorderBrush="{DynamicResource SilverBrush}">
             <Border.Background>
-                <LinearGradientBrush StartPoint="0.5,0"
-				   EndPoint="0.5,1">
-                    <GradientStop Color="White" Offset="0" />
-                    <GradientStop Color="Snow" Offset="1" />
+                <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                    <GradientStop Color="{DynamicResource WhiteColor}" Offset="0" />
+                    <GradientStop Color="{DynamicResource SnowColor}" Offset="1" />
                 </LinearGradientBrush>
             </Border.Background>
         </Border>
@@ -157,26 +50,35 @@
                     <Border Grid.ColumnSpan="2">
                         <Border.Background>
                             <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
-                                <GradientStop Color="#800080" Offset="0" />
-                                <GradientStop Color="#800080" Offset="1" />
+                                <GradientStop Color="{DynamicResource AccentColor}" Offset="0" />
+                                <GradientStop Color="{DynamicResource AccentColor}" Offset="1" />
                             </LinearGradientBrush>
                         </Border.Background>
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="550*"></ColumnDefinition>
-                                <ColumnDefinition Width="175*"></ColumnDefinition>
+                                <ColumnDefinition Width="550*" />
+                                <ColumnDefinition Width="550*" />
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left" Margin="10,0,0,0">
-                                <Label FontFamily="Segoe UI Symbol" FontStretch="UltraExpanded" FontSize="35" Content="&#x266C;" Foreground="Snow"></Label>
-                                <Label Foreground="Snow" FontSize="35" FontStretch="UltraExpanded">Game</Label>
+                                <Label FontFamily="Segoe UI Symbol" FontStretch="UltraExpanded" FontSize="25" Content="&#x266C;" 
+                                       Foreground="{DynamicResource SnowBrush}" />
+                                <Label Foreground="{DynamicResource SnowBrush}" FontSize="25" FontStretch="UltraExpanded" Content="Game" />
                             </StackPanel>
-                            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right" Height="30">
-                                <Button Name="MinimizeButton" Style="{StaticResource WindowButtonStyle}" Content="0"
-                             shell:WindowChrome.IsHitTestVisibleInChrome="True" Click="MinimizeClick" />
-                                <Button Name="RestoreButton" Style="{StaticResource WindowButtonStyle}" Content="1" 
-                             shell:WindowChrome.IsHitTestVisibleInChrome="True" Click="RestoreClick" />
-                                <Button Name="CloseButton" Style="{StaticResource WindowButtonStyle}" Content="r" 
-                             shell:WindowChrome.IsHitTestVisibleInChrome="True" Click="CloseClick"/>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right">
+                                <Label Foreground="{DynamicResource SnowBrush}" FontSize="25" FontStretch="UltraExpanded" Margin="0,0,10,0" 
+                                       Content="{Binding SelectedSongPreviewName}" />
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right" Height="30">
+                                    <Button Style="{StaticResource MinimizeButtonStyle}" VerticalAlignment="Bottom"
+                                            SnapsToDevicePixels="True" shell:WindowChrome.IsHitTestVisibleInChrome="True" 
+                                            Click="MinimizeClick" ToolTip="Minimize" Foreground="{DynamicResource WhiteBrush}"/>
+                                    <ToggleButton x:Name="MaximizeButton" Style="{StaticResource MaximizeButtonStyle}"
+                                                  VerticalAlignment="Bottom" SnapsToDevicePixels="True"
+                                                  shell:WindowChrome.IsHitTestVisibleInChrome="True"
+                                                  Click="RestoreClick" ToolTip="Maximie" Foreground="{DynamicResource WhiteBrush}" Margin="0,0,0,3" />
+                                    <Button Style="{StaticResource CloseButtonStyle}" SnapsToDevicePixels="True" 
+                                            shell:WindowChrome.IsHitTestVisibleInChrome="True" 
+                                            Click="CloseClick" ToolTip="Close" Foreground="{DynamicResource WhiteBrush}"/>
+                                </StackPanel>
                             </StackPanel>
                         </Grid>
                     </Border>
@@ -187,82 +89,148 @@
         <Grid Grid.Row="1">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="203*"></ColumnDefinition>
+                    <ColumnDefinition Width="203*" />
                     <ColumnDefinition Width="2" />
-                    <ColumnDefinition Width="569*"></ColumnDefinition>
+                    <ColumnDefinition Width="569*" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="90*"></RowDefinition>
-                    <RowDefinition Height="2"></RowDefinition>
-                    <RowDefinition Height="15*"></RowDefinition>
+                    <RowDefinition Height="60*" />
+                    <RowDefinition Height="2" />
+                    <RowDefinition Height="40*" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
-                <ListBox ItemsSource="{Binding Source={StaticResource CvsParticipants}}" Grid.RowSpan="3"
-                         ItemContainerStyle="{DynamicResource ParticipantListBoxItemContainerStyle}" />
+                <controls:ParticipantsList DataContext="{Binding Participants}" />
                 <GridSplitter Grid.Row="0" Grid.RowSpan="3" Grid.Column="1" Width="2" HorizontalAlignment="Stretch" ShowsPreview="True" />
-                <ListBox Grid.Row="0" Grid.Column="2" ItemsSource="{Binding Source={StaticResource CvsGameData}}" 
-                         ItemContainerStyle="{DynamicResource GameDataListBoxItemContainerStyle}" />
-                <GridSplitter ResizeDirection="Rows" Grid.Row="1" Grid.Column="2" Height="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"  ShowsPreview="True" />
-                <StackPanel Grid.Row="2" Grid.Column="2" Orientation="Horizontal"
-                            Visibility="{Binding SelectedSong, Converter={StaticResource NullVisibilityConverter}}">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"></RowDefinition>
-                            <RowDefinition Height="Auto"></RowDefinition>
-                            <RowDefinition Height="*"></RowDefinition>
-                        </Grid.RowDefinitions>
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Top">
-                            <Label>
-                                <Bold>
-                                    <Label Content="{Binding SelectedSongPreviewName}" FontSize="30" FontFamily="Verdana"
-                           HorizontalContentAlignment="Center" Margin="5,0,5,0" />
-                                </Bold>
-                            </Label>
-                            <Button Style="{StaticResource WindowColoredButtonStyle}" FontFamily="Segoe UI Symbol" 
-                                FontSize="30" Content="&#128129;" ToolTip="Show song info" VerticalAlignment="Center" Click="ShowSongInfo"/>
-                            <Button Content="Skip" FontSize="20" Click="SaveForLaterClick"  Margin="10,0,10,0"
-                                HorizontalAlignment="Center" VerticalAlignment="Center" Width="80"/>
-                        </StackPanel>
-                        <StackPanel Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Top">
-                            <Slider Margin="10,0,0,0" Width="200" VerticalAlignment="Center" Value="{Binding PlayerPosition}" 
-                                    Maximum="100" Minimum="0" />
-                            <Label>
-                                <Bold>
-                                    <Label Content="{Binding TimerTick}" FontSize="30" FontFamily="Verdana"
-                           HorizontalContentAlignment="Center" Margin="5,0,5,0" />
-                                </Bold>
-                            </Label>
-                            <Button Content="Play" FontSize="20" Command="{Binding PlayCommand}"  Margin="10,0,10,0"
-                                HorizontalAlignment="Center" VerticalAlignment="Center" Width="80"/>
-                            <Button Content="Pause" FontSize="20" Command="{Binding PauseCommand}" Margin="0,0,10,0"
-                                HorizontalAlignment="Center" VerticalAlignment="Center" Width="80"/>
-                            <Button Content="Stop" FontSize="20" Command="{Binding StopCommand}"
-                                HorizontalAlignment="Center" VerticalAlignment="Center" Width="80" Margin="0,0,10,0"/>
-                            <ComboBox x:Name="WinnerCombobox" SelectedIndex="0" HorizontalAlignment="Center" 
-                                      VerticalAlignment="Center" DisplayMemberPath="Name" SelectedValuePath="Name" Margin="0,0,10,0">
-                                <ComboBox.Resources>
-                                    <CollectionViewSource x:Key="ParticipantsList" Source="{Binding Path=Participants}" />
-                                </ComboBox.Resources>
-                                <ComboBox.ItemsSource>
-                                    <CompositeCollection>
-                                        <models:GameParticipant Name="Select a winner" />
-                                        <CollectionContainer Collection="{Binding Source={StaticResource ParticipantsList}}" />
-                                    </CompositeCollection>
-                                </ComboBox.ItemsSource>
-                            </ComboBox>
-                            <Button Name="AddPoints" Style="{StaticResource WindowColoredButtonStyle}" FontFamily="Segoe UI Symbol" 
-                                FontSize="30" Content="&#x2795;" Margin="0,5,10,0" ToolTip="Add points" VerticalAlignment="Top"
-                                Click="AddPointsClick"/>
-                            <Button Name="RemovePoints" Style="{StaticResource WindowColoredButtonStyle}" FontFamily="Segoe UI Symbol" 
-                                FontSize="30" Content="&#x2796;" Margin="0,5,10,0" ToolTip="Remove points" VerticalAlignment="Top"
-                                Click="RemovePointsClick"/>
-                        </StackPanel>
-                        <StackPanel Grid.Row="2" Orientation="Horizontal" VerticalAlignment="Top">
-                            <TextBox Name="ConsoleTextBox" Margin="10,0,0,0" Width="500" ToolTip="Add/Remove/Set/Lock/Unlock CategoryNo/ParticipantNo Price/Points"></TextBox>
-                            <Button Name="ProcessConsoleCommand" Margin="10,0,0,0" Click="ProcessConsoleCommandClick">Process command</Button>
+                <Grid Grid.Row="0" Grid.Column="2" Grid.RowSpan="3">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="70*" />
+                        <RowDefinition Height="2" />
+                        <RowDefinition Height="10*" />
+                    </Grid.RowDefinitions>
+                    <controls:SongButtonTabsControl Grid.Row="0" DataContext="{Binding GameData}" />
+                    <GridSplitter ResizeDirection="Rows" Grid.Row="1" Height="2" VerticalAlignment="Stretch" 
+                                  HorizontalAlignment="Stretch"  ShowsPreview="True" />
+                    <Grid Grid.Row="2">
+                        <StackPanel HorizontalAlignment="Left">
+                            <ToggleButton Name="ParticipantsSettingsButton" Margin="0,0,7,0" Width="26" Height="26" 
+                                          Style="{StaticResource SettingsButtonStyle}" Foreground="{DynamicResource SidebarForegroundBrush}" 
+                                          ToolTip="Settings" VerticalAlignment="Top" HorizontalAlignment="Left">
+                            <ToggleButton.RenderTransform>
+                                <TranslateTransform />
+                            </ToggleButton.RenderTransform>
+                        </ToggleButton>
+                            <Popup IsOpen="{Binding IsChecked, ElementName=ParticipantsSettingsButton}" StaysOpen="False"
+                                   PlacementTarget="{Binding ElementName=ParticipantsSettingsButton}"              
+                                   AllowsTransparency="False" PopupAnimation="Slide" HorizontalOffset="10" VerticalOffset="0">
+                                <Border BorderThickness="1" BorderBrush="{DynamicResource SilverBrush}">
+                                    <Border.Background>
+                                        <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                                            <GradientStop Color="{DynamicResource WhiteColor}" Offset="0" />
+                                            <GradientStop Color="{DynamicResource SnowColor}" Offset="1" />
+                                        </LinearGradientBrush>
+                                    </Border.Background>
+                                    <Grid Height="70" Width="300">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="50*" />
+                                            <RowDefinition Height="59*" />
+                                        </Grid.RowDefinitions>
+                                        <StackPanel VerticalAlignment="Top" Background="{DynamicResource BlackBrush}" Orientation="Horizontal">
+                                            <TextBlock Margin="7,0,0,5" Text="Enable RemovePoints buttons" Foreground="{DynamicResource WhiteBrush}" 
+                                                       FontSize="20" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Row="1" Background="{DynamicResource WhiteBrush}">
+                                            <CheckBox Style="{StaticResource CommonCheckBoxStyle}"
+                                                      Margin="10,10,10,0" FontWeight="Bold"
+                                                      IsChecked="{Binding ShowRemovePointsButtons, Mode=TwoWay}" 
+                                                      Foreground="{DynamicResource ForegroundBrush}">
+                                                <Label FontSize="16" Margin="0,-8,0,0">
+                                                    <Bold>Enable RemovePoints buttons</Bold>
+                                                </Label>
+                                            </CheckBox>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                            </Popup>
+                            <ItemsControl ItemsSource="{Binding Participants}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate DataType="{x:Type models:GameParticipant}">
+                                    <StackPanel Orientation="Horizontal" Margin="10,5,0,0">
+                                        <Button Style="{StaticResource HighlightedButtonStyle}" Margin="0,0,5,0" Width="190" 
+                                            Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type windows:GameWindow}}, Path=DataContext.PriceWinnerCommand}" 
+                                            CommandParameter="{Binding}"
+                                            IsEnabled="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type windows:GameWindow}}, Path=DataContext.SelectedSong, Converter={StaticResource NullToBoolConverter}}">
+                                            <StackPanel Orientation="Horizontal">
+                                                <Label Content="{Binding Name}" Foreground="White" FontSize="16" Margin="0,-5,0,0" />
+                                                <Label FontFamily="Segoe UI Symbol" Content="&#xE001;" FontSize="25" 
+                                                       Margin="0,-12,0,-10" Foreground="{DynamicResource GreenBrush}" />
+                                            </StackPanel>
+                                        </Button>
+                                        <Button Style="{StaticResource HighlightedButtonStyle}" Background="{DynamicResource SnowBrush}" 
+                                                Margin="0,0,5,0"
+                                                Width="50"
+                                                Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type windows:GameWindow}}, Path=DataContext.PunishWinnerCommand}" 
+                                                CommandParameter="{Binding}"
+                                                IsEnabled="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type windows:GameWindow}}, Path=DataContext.SelectedSong, Converter={StaticResource NullToBoolConverter}}"
+                                                Visibility="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type windows:GameWindow}}, Path=DataContext.ShowRemovePointsButtons, Converter={StaticResource BoolToCollapsedVisibilityConverter}}">
+                                            <Label FontFamily="Segoe UI Symbol" Content="&#xE10A;" FontSize="25" 
+                                                   Margin="-21,-12,-25,-10" Foreground="{DynamicResource RedBrush}" />
+                                        </Button>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
                         </StackPanel>
                     </Grid>
-                </StackPanel>
+                </Grid>
+                <GridSplitter ResizeDirection="Rows" Grid.Row="1" Grid.Column="0" Height="2" VerticalAlignment="Stretch" 
+                              HorizontalAlignment="Stretch"  ShowsPreview="True" />
+                <controls:PlayerControl Grid.Row="2" Grid.Column="0" DataContext="{Binding PlViewModel}" />
+
+                <Border Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource SilverBrush}"
+                        Visibility="{Binding PlViewModel.PlayerException, Converter={StaticResource NullToCollapsedVisibilityConverter}}">
+                    <StackPanel Margin="5,0,0,0" Orientation="Horizontal">
+                        <TextBlock Margin="0,0,10,0" Text="{Binding PlViewModel.PlayerException.Message}" Foreground="{DynamicResource BlackBrush}"
+                            FontSize="12" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
+                        <TextBlock Margin="0,0,10,0" TextWrapping="Wrap" Text="Clear" HorizontalAlignment="Left" FontWeight="SemiBold">
+                            <TextBlock.Style>
+                                <Style TargetType="{x:Type TextBlock}">
+                                    <Setter Property="Cursor" Value="Hand"/>
+                                    <Setter Property="Foreground" Value="{DynamicResource AccentBrush}"/>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="TextDecorations" Value="Underline"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                            <TextBlock.InputBindings>
+                                <MouseBinding Command="{Binding CloseExceptionCommand}" MouseAction="LeftClick" />
+                            </TextBlock.InputBindings>
+                        </TextBlock>
+                        <TextBlock Margin="0,0,10,0" TextWrapping="Wrap" Text="More..." HorizontalAlignment="Left" FontWeight="SemiBold">
+                            <TextBlock.Style>
+                                <Style TargetType="{x:Type TextBlock}">
+                                    <Setter Property="Cursor" Value="Hand"/>
+                                    <Setter Property="Foreground" Value="{DynamicResource AccentBrush}"/>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="TextDecorations" Value="Underline"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                            <TextBlock.InputBindings>
+                                <MouseBinding Command="{Binding ShowExceptionCommand}" MouseAction="LeftClick" />
+                            </TextBlock.InputBindings>
+                        </TextBlock>
+                    </StackPanel>
+                </Border>
             </Grid>
         </Grid>
     </Grid>
-</Window>
+</layout:WindowBase>
