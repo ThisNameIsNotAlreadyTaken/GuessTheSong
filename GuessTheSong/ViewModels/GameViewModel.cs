@@ -126,7 +126,7 @@ namespace GuessTheSong.ViewModels
 
             song.IsDelayed = true;
 
-            if (PlViewModel.IsPlaying) PlViewModel.Stop();
+            if (PlViewModel.IsPlaying) PlViewModel.Pause();
         }
     }
 }
