@@ -144,6 +144,8 @@
     <Compile Include="Infrasctucture\DelegateParametrizedCommand.cs" />
     <Compile Include="Infrasctucture\ICloneable.cs" />
     <Compile Include="Infrasctucture\ObservableObject.cs" />
+    <Compile Include="Models\SongFileParseOptions.cs" />
+    <Compile Include="Models\SongFilePart.cs" />
     <Compile Include="Layout\WindowBase.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\GameData.cs" />

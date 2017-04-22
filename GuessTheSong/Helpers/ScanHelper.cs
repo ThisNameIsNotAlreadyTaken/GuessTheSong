@@ -10,7 +10,7 @@ namespace GuessTheSong.Helpers
     {
         private static readonly List<string> ExtensionsList = new List<string> { ".mp3", ".wav", "wma" };
 
-        private static List<Song> GetSongFromDirectory(string directoryPath)
+        private static List<Song> GetSongFromDirectory(string directoryPath, SongFileParseOptions parseOptions)
         {
             return Directory.GetFiles(directoryPath, "*", SearchOption.TopDirectoryOnly).ToList()
                         .Where(x => ExtensionsList.Any(y => x.EndsWith(y, StringComparison.OrdinalIgnoreCase))).Select(f =>
@@ -26,20 +26,82 @@ namespace GuessTheSong.Helpers
                             try
                             {
                                 var name = f.Substring(f.LastIndexOf("\\", StringComparison.Ordinal) + 1);
-                                var info = name.Split(new[] {"--"}, StringSplitOptions.None);
+                                var info = name.Split(new[] {parseOptions.Delimeter}, StringSplitOptions.None);
 
-                                var artistName = info.Length > 1 ? info[1].Trim() : null;
-                                var songName = info.Length > 2
-                                    ? info[2].Trim()
-                                        .Substring(0, info[2].LastIndexOf(".", StringComparison.Ordinal) - 1)
-                                    : null;
+                                string artistName = null;
+                                string songName = null;
+                                string priceString = null;
 
-                                var price = 0;
+                                if (info.Length > 0)
+                                {
+                                    switch (parseOptions.FirstPart)
+                                    {
+                                        case SongFilePart.Artist:
+                                            artistName = info[0];
+                                            break;
+                                        case SongFilePart.Name:
+                                            songName = info[0];
+                                            break;
+                                        case SongFilePart.Price:
+                                            priceString = info[0];
+                                            break;
+                                        default:
+                                            throw new ArgumentOutOfRangeException();
+                                    }
+                                }
 
-                                if (info.Length > 0) int.TryParse(info[0].Trim(), out price);
+                                if (info.Length > 1)
+                                {
+                                    switch (parseOptions.SecondPart)
+                                    {
+                                        case SongFilePart.Artist:
+                                            artistName = info[1];
+                                            break;
+                                        case SongFilePart.Name:
+                                            songName = info[1];
+                                            break;
+                                        case SongFilePart.Price:
+                                            priceString = info[1];
+                                            break;
+                                        default:
+                                            throw new ArgumentOutOfRangeException();
+                                    }
+                                }
 
-                                result.ArtistName = artistName;
-                                result.Name = songName;
+                                if (info.Length > 2)
+                                {
+                                    switch (parseOptions.ThirdPart)
+                                    {
+                                        case SongFilePart.Artist:
+                                            artistName = info[2];
+                                            break;
+                                        case SongFilePart.Name:
+                                            songName = info[2];
+                                            break;
+                                        case SongFilePart.Price:
+                                            priceString = info[2];
+                                            break;
+                                        default:
+                                            throw new ArgumentOutOfRangeException();
+                                    }
+                                }
+
+                                int price;
+
+                                var isPriceComverted = int.TryParse(priceString, out price);
+
+                                if (artistName == null && songName == null)
+                                {
+                                    throw new Exception("Could not found artist and song names in file");
+                                }
+
+                                if (!isPriceComverted)
+                                {
+                                    throw new Exception("Could not found valuable price in file");
+                                }
+
+                                result.ArtistName = artistName?.Trim();
+                                result.Name = songName?.Trim().Substring(0, info[2].LastIndexOf(".", StringComparison.Ordinal) - 1);
                                 result.Price = price;
                             }
                             catch (Exception e)
@@ -48,16 +110,14 @@ namespace GuessTheSong.Helpers
                             }
 
                             return result;
-
                         }).OrderBy(x => x.Price).ToList();
         }
 
-        private static Category GetCategoryFromDirectory(string directoryPath)
+        private static Category GetCategoryFromDirectory(string directoryPath, SongFileParseOptions parseOptions)
         {
             var category = new Category
             {
-                Name = directoryPath.Substring(directoryPath.LastIndexOf("\\", StringComparison.Ordinal) + 1),
-                Songs = GetSongFromDirectory(directoryPath)
+                Name = directoryPath.Substring(directoryPath.LastIndexOf("\\", StringComparison.Ordinal) + 1), Songs = GetSongFromDirectory(directoryPath, parseOptions)
             };
 
             category.Songs.ForEach(s => s.CategoryName = category.Name);
@@ -65,16 +125,15 @@ namespace GuessTheSong.Helpers
             return category;
         }
 
-        private static GameRound GetGameRoundFromDirectory(string directoryPath)
+        private static GameRound GetGameRoundFromDirectory(string directoryPath, SongFileParseOptions parseOptions)
         {
             return new GameRound
             {
-                Name = directoryPath.Substring(directoryPath.LastIndexOf("\\", StringComparison.Ordinal) + 1),
-                Categories = Directory.GetDirectories(directoryPath).ToList().Select(GetCategoryFromDirectory).ToList()
+                Name = directoryPath.Substring(directoryPath.LastIndexOf("\\", StringComparison.Ordinal) + 1), Categories = Directory.GetDirectories(directoryPath).ToList().Select(x => GetCategoryFromDirectory(x, parseOptions)).ToList()
             };
         }
 
-        public static GameData GetGameDataFromDirectory(string directoryPath, bool isMultipleRoundGame)
+        public static GameData GetGameDataFromDirectory(string directoryPath, SongFileParseOptions parseOptions, bool isMultipleRoundGame)
         {
             var topDirectories = Directory.GetDirectories(directoryPath).ToList();
             GameData gameData;
@@ -84,7 +143,7 @@ namespace GuessTheSong.Helpers
             {
                 gameData = new GameData
                 {
-                    Rounds = topDirectories.Select(GetGameRoundFromDirectory).ToList()
+                    Rounds = topDirectories.Select(x => GetGameRoundFromDirectory(x, parseOptions)).ToList()
                 };
             }
             else
@@ -95,8 +154,7 @@ namespace GuessTheSong.Helpers
                     {
                         new GameRound
                         {
-                            Name = "Round",
-                            Categories = topDirectories.Select(GetCategoryFromDirectory).ToList()
+                            Name = "Round", Categories = topDirectories.Select(x => GetCategoryFromDirectory(x, parseOptions)).ToList()
                         }
                     }
                 };
@@ -128,8 +186,7 @@ namespace GuessTheSong.Helpers
                             c.Songs.ForEach(s =>
                             {
                                 if (s.File.ParsingException != null)
-                                    warningNotes.Add(
-                                        $"File name {s.File.FullPath} is incorrect. Parsing Exception: {s.File.ParsingException.Message}");
+                                    warningNotes.Add($"File name {s.File.FullPath} is incorrect. Parsing Exception: {s.File.ParsingException.Message}");
                             });
                     });
             });

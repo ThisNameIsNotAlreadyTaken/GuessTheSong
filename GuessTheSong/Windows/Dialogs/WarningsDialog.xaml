@@ -89,9 +89,9 @@
                     </ListBox.ItemTemplate>
                 </ListBox>
                 <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,5,0,5">
-                    <Button Content="OK" Width="70" Padding="10,3" Margin="0,0,10,0" Style="{StaticResource HighlightedButtonStyle}"
+                    <Button Content="That's OK" Width="80" Padding="10,3" Margin="0,0,10,0" Style="{StaticResource CommonButtonStyle}"
                             ToolTip="OK" Click="OkButton" />
-                    <Button Content="Cancel" Width="70" Padding="10,3" Margin="0,0,10,0" Style="{StaticResource CommonButtonStyle}"
+                    <Button Content="That's not OK" Width="95" Padding="10,3" Margin="0,0,10,0" Style="{StaticResource HighlightedButtonStyle}"
                             ToolTip="Cancel" Click="CancelButton" />
                 </StackPanel>
             </Grid>

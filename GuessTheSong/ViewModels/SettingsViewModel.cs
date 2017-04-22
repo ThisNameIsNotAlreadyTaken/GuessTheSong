@@ -51,6 +51,8 @@ namespace GuessTheSong.ViewModels
 
         public bool IsStartButtonEnabled => CurrentGameData?.Rounds != null && CurrentGameData.Rounds.Any() && Participants.Any();
 
+        public SongFileParseOptions ParseOptions { get; } = new SongFileParseOptions();
+
         #endregion
 
         #region Commands
@@ -76,7 +78,7 @@ namespace GuessTheSong.ViewModels
 
             if (Directory.Exists(vm.SelectedFolder.Path))
             {
-                var scanedData = ScanHelper.GetGameDataFromDirectory(vm.SelectedFolder.Path, IsMultipleRoundGame);
+                var scanedData = ScanHelper.GetGameDataFromDirectory(vm.SelectedFolder.Path, ParseOptions, IsMultipleRoundGame);
 
                 if (!scanedData.WarningNotes.IsNullOrEmpty())
                 {

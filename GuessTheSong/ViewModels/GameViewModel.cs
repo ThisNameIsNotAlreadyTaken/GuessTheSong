@@ -64,8 +64,6 @@ namespace GuessTheSong.ViewModels
 
         public void PriceWinner(GameParticipant participant)
         {
-            if (PlViewModel.IsPlaying) PlViewModel.Pause();
-
             participant.Score += SelectedSong.Price;
 
             if (!SelectedSong.IsGuessed)

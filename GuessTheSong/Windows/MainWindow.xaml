@@ -6,8 +6,10 @@
         xmlns:shell="http://schemas.microsoft.com/winfx/2006/xaml/presentation/shell"
         xmlns:layout="clr-namespace:GuessTheSong.Layout"
         xmlns:models="clr-namespace:GuessTheSong.Models"
+        xmlns:system="clr-namespace:System;assembly=mscorlib"
+        xmlns:enginesAlias="clr-namespace:GuessTheSong.Models"
         mc:Ignorable="d"
-        Title="Guess The Song" Height="250" Width="390" WindowStartupLocation="CenterScreen" Icon="../icon.ico">
+        Title="Guess The Song" Height="350" Width="450" WindowStartupLocation="CenterScreen" Icon="../icon.ico">
     <shell:WindowChrome.WindowChrome>
         <shell:WindowChrome
             ResizeBorderThickness="6"
@@ -16,6 +18,13 @@
             GlassFrameThickness="0">
         </shell:WindowChrome>
     </shell:WindowChrome.WindowChrome>
+    <Window.Resources>
+        <ObjectDataProvider x:Key="EnginesDataFromEnum" MethodName="GetValues" ObjectType="{x:Type system:Enum}">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="enginesAlias:SongFilePart"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -86,21 +95,22 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="2.7*" />
                     <RowDefinition Height="3*" />
-                    <RowDefinition Height="7*" />
+                    <RowDefinition Height="10*" />
+                    <RowDefinition Height="3*" />
                     <RowDefinition Height="3*" />
                 </Grid.RowDefinitions>
                 <StackPanel Orientation="Horizontal" Margin="10,0,0,0" VerticalAlignment="Top" Grid.Row="0">
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="70*" />
-                            <ColumnDefinition Width="45*" />
+                            <ColumnDefinition Width="4*" />
+                            <ColumnDefinition Width="3*" />
                         </Grid.ColumnDefinitions>
-                        <StackPanel Orientation="Horizontal" Margin="0,0,15,0">
+                        <StackPanel Orientation="Horizontal" Margin="0,0,75,0" >
                             <CheckBox Style="{StaticResource CommonCheckBoxStyle}" Content="Multiple round game" 
                                       Margin="0,7,10,0" FontSize="14"
                                       IsChecked="{Binding IsMultipleRoundGame, Mode=TwoWay}" Foreground="{DynamicResource ForegroundBrush}"/>
                         </StackPanel>
-                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
                             <TextBlock Text="Choose storage folder"
                 		               FontSize="14" Margin="0,7,10,0" Foreground="{DynamicResource ForegroundBrush}"/>
                             <Button x:Name="DirectoryDialogShow" Style="{StaticResource WindowColoredButtonStyle}"  
@@ -148,7 +158,18 @@
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
-                <StackPanel Grid.Row="3" Margin="0,5,0,0">
+                <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center" DataContext="{Binding ParseOptions}">
+                    <TextBlock Text="Template:" FontSize="14" Foreground="{DynamicResource ForegroundBrush}" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                    <ComboBox ItemsSource="{Binding Source={StaticResource EnginesDataFromEnum}}" SelectedItem="{Binding Path=FirstPart, Mode=TwoWay}" 
+                                  Margin="0,0,10,0" VerticalAlignment="Center" Style="{StaticResource ComboBoxStyle}"/>
+                    <TextBox Text="{Binding Path=Delimeter, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Margin="0,0,10,0"  VerticalAlignment="Center"></TextBox>
+                    <ComboBox ItemsSource="{Binding Source={StaticResource EnginesDataFromEnum}}" SelectedItem="{Binding Path=SecondPart, Mode=TwoWay}" 
+                                  Margin="0,0,10,0" VerticalAlignment="Center" Style="{StaticResource ComboBoxStyle}"/>
+                    <TextBox Text="{Binding Path=Delimeter, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Margin="0,0,10,0"  VerticalAlignment="Center"></TextBox>
+                    <ComboBox ItemsSource="{Binding Source={StaticResource EnginesDataFromEnum}}" SelectedItem="{Binding Path=ThirdPart, Mode=TwoWay}" 
+                                  Margin="0,0,10,0" VerticalAlignment="Center" Style="{StaticResource ComboBoxStyle}"/>
+                </StackPanel>
+                <StackPanel Grid.Row="4" Margin="0,5,0,0">
                     <Button Content="Start game" Width="100" Padding="36,3" HorizontalAlignment="Right" VerticalAlignment="Top"
                             Margin="0,0,10,0" Style="{StaticResource HighlightedButtonStyle}" IsEnabled="{Binding IsStartButtonEnabled}" 
                             ToolTip="Start" Command="{Binding StartGameCommand}" />
