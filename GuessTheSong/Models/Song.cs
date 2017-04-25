@@ -50,6 +50,8 @@ namespace GuessTheSong.Models
             }
         }
 
+        public bool IsPigInTheBox { get; set; }
+
         public Song Clone()
         {
             return new Song
@@ -61,7 +63,8 @@ namespace GuessTheSong.Models
                 File = File.Clone(),
                 IsGuessed = false,
                 IsSelected = false,
-                IsDelayed = false
+                IsDelayed = false,
+                IsPigInTheBox = IsPigInTheBox
             };
         }
     }

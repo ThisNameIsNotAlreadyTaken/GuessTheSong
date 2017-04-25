@@ -53,6 +53,8 @@ namespace GuessTheSong.ViewModels
 
         public SongFileParseOptions ParseOptions { get; } = new SongFileParseOptions();
 
+        public bool IsPigInTheBoxModeEnabled { get; set; }
+
         #endregion
 
         #region Commands
@@ -102,8 +104,30 @@ namespace GuessTheSong.ViewModels
 
         private void StartGame()
         {
-            var tuple = new Tuple<GameData, List<GameParticipant>>(CurrentGameData.Clone(), Participants.ToList().ConvertAll(x => x.Clone()));
+            var clonedData = CurrentGameData.Clone();
+
+            FillPigsInTheBoxFlag(clonedData);
+
+            var tuple = new Tuple<GameData, List<GameParticipant>>(clonedData, Participants.ToList().ConvertAll(x => x.Clone()));
+
             new GameWindow(tuple).Show();
+        }
+
+        private void FillPigsInTheBoxFlag(GameData gameData)
+        {
+            if (!IsPigInTheBoxModeEnabled) return;
+
+            var categories = gameData.Rounds.SelectMany(x => x.Categories).ToList();
+            var songs = categories.SelectMany(x => x.Songs).ToList();
+
+            var pigsInTheBoxCnt = songs.Count/Math.Round((double)songs.Count/categories.Count*1.5);
+
+            var rnd = new Random();
+
+            for (var i = 0; i < pigsInTheBoxCnt; i++)
+            {
+                songs[rnd.Next(0, songs.Count - 1)].IsPigInTheBox = true;
+            }
         }
 
         private void AddParticipant(MainWindow window)

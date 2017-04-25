@@ -115,6 +115,16 @@ namespace GuessTheSong.ViewModels
 
             if (!File.Exists(SelectedSong.File.FullPath)) return;
 
+            if (SelectedSong.IsPigInTheBox)
+            {
+                if (PlViewModel.IsPlaying)
+                {
+                    PlViewModel.Pause();
+                }
+
+                new PigInTheBoxDialog().ShowDialog();
+            }
+
             PlViewModel.CurrentAudio = SelectedSong;
         }
 
